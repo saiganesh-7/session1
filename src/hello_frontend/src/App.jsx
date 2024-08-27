@@ -1,31 +1,56 @@
-import { useState } from 'react';
-import { hello_backend } from 'declarations/hello_backend';
+import React, { useState } from "react";
 
-function App() {
-  const [greeting, setGreeting] = useState('');
+function BMICalculator() {
+  const [height, setHeight] = useState("");
+  const [weight, setWeight] = useState("");
+  const [bmi, setBMI] = useState(null);
+  const [message, setMessage] = useState("");
 
-  function handleSubmit(event) {
-    event.preventDefault();
-    const name = event.target.elements.name.value;
-    hello_backend.greet(name).then((greeting) => {
-      setGreeting(greeting);
-    });
-    return false;
-  }
+  const calculateBMI = () => {
+    if (height && weight) {
+      const bmiValue = (weight / (height * height)).toFixed(2);
+      setBMI(bmiValue);
+
+      if (bmiValue < 18.5) {
+        setMessage("Underweight");
+      } else if (bmiValue >= 18.5 && bmiValue < 24.9) {
+        setMessage("Normal weight");
+      } else if (bmiValue >= 25 && bmiValue < 29.9) {
+        setMessage("Overweight");
+      } else {
+        setMessage("Obesity");
+      }
+    }
+  };
 
   return (
-    <main>
-      <img src="/logo2.svg" alt="DFINITY logo" />
-      <br />
-      <br />
-      <form action="#" onSubmit={handleSubmit}>
-        <label htmlFor="name">Enter your name: &nbsp;</label>
-        <input id="name" alt="Name" type="text" />
-        <button type="submit">Click Me!</button>
-      </form>
-      <section id="greeting">{greeting}</section>
-    </main>
+    <div style={{ maxWidth: "300px", margin: "0 auto" }}>
+      <h2>BMI Calculator</h2>
+      <div>
+        <label>Height (in meters): </label>
+        <input
+          type="number"
+          value={height}
+          onChange={(e) => setHeight(e.target.value)}
+        />
+      </div>
+      <div>
+        <label>Weight (in kg): </label>
+        <input
+          type="number"
+          value={weight}
+          onChange={(e) => setWeight(e.target.value)}
+        />
+      </div>
+      <button onClick={calculateBMI}>Calculate</button>
+      {bmi && (
+        <div>
+          <h3>Your BMI: {bmi}</h3>
+          <p>{message}</p>
+        </div>
+      )}
+    </div>
   );
 }
 
-export default App;
+export default BMICalculator;

@@ -1,56 +1,72 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
-function BMICalculator() {
-  const [height, setHeight] = useState("");
-  const [weight, setWeight] = useState("");
-  const [bmi, setBMI] = useState(null);
-  const [message, setMessage] = useState("");
+const App = () => {
+  const [weight, setWeight] = useState('');
+  const [height, setHeight] = useState('');
+  const [bmi, setBmi] = useState(null);
+  const [message, setMessage] = useState('');
 
-  const calculateBMI = () => {
-    if (height && weight) {
+  const calculateBMI = (e) => {
+    e.preventDefault();
+    if (weight && height) {
       const bmiValue = (weight / (height * height)).toFixed(2);
-      setBMI(bmiValue);
-
-      if (bmiValue < 18.5) {
-        setMessage("Underweight");
-      } else if (bmiValue >= 18.5 && bmiValue < 24.9) {
-        setMessage("Normal weight");
-      } else if (bmiValue >= 25 && bmiValue < 29.9) {
-        setMessage("Overweight");
-      } else {
-        setMessage("Obesity");
-      }
+      setBmi(bmiValue);
+      determineBMICategory(bmiValue);
+    } else {
+      setMessage('Please enter valid weight and height');
     }
   };
 
+  const determineBMICategory = (bmiValue) => {
+    let bmiMessage = '';
+    if (bmiValue < 18.5) {
+      bmiMessage = 'Underweight';
+    } else if (bmiValue >= 18.5 && bmiValue < 24.9) {
+      bmiMessage = 'Normal weight';
+    } else if (bmiValue >= 25 && bmiValue < 29.9) {
+      bmiMessage = 'Overweight';
+    } else {
+      bmiMessage = 'Obesity';
+    }
+    setMessage(bmiMessage);
+  };
+
   return (
-    <div style={{ maxWidth: "300px", margin: "0 auto" }}>
-      <h2>BMI Calculator</h2>
-      <div>
-        <label>Height (in meters): </label>
-        <input
-          type="number"
-          value={height}
-          onChange={(e) => setHeight(e.target.value)}
-        />
-      </div>
-      <div>
-        <label>Weight (in kg): </label>
-        <input
-          type="number"
-          value={weight}
-          onChange={(e) => setWeight(e.target.value)}
-        />
-      </div>
-      <button onClick={calculateBMI}>Calculate</button>
-      {bmi && (
+    <div style={{ padding: '20px' }}>
+      <h1>BMI Calculator</h1>
+      <form onSubmit={calculateBMI}>
         <div>
-          <h3>Your BMI: {bmi}</h3>
-          <p>{message}</p>
+          <label>Weight (kg): </label>
+          <input
+            type="number"
+            value={weight}
+            onChange={(e) => setWeight(e.target.value)}
+            placeholder="Enter your weight"
+          />
+        </div>
+        <div style={{ marginTop: '10px' }}>
+          <label>Height (meters): </label>
+          <input
+            type="number"
+            step="0.01"
+            value={height}
+            onChange={(e) => setHeight(e.target.value)}
+            placeholder="Enter your height"
+          />
+        </div>
+        <div style={{ marginTop: '10px' }}>
+          <button type="submit">Calculate BMI</button>
+        </div>
+      </form>
+
+      {bmi && (
+        <div style={{ marginTop: '20px' }}>
+          <h2>Your BMI: {bmi}</h2>
+          <h3>{message}</h3>
         </div>
       )}
     </div>
   );
-}
+};
 
-export default BMICalculator;
+export default App;

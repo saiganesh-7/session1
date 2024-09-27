@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+/// <reference types="vitest" />
+>>>>>>> e53dac7a15efe1a196e1360110566c727c66b42f
 import { fileURLToPath, URL } from 'url';
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
@@ -30,6 +34,13 @@ export default defineConfig({
     environment("all", { prefix: "CANISTER_" }),
     environment("all", { prefix: "DFX_" }),
   ],
+<<<<<<< HEAD
+=======
+  test: {
+    environment: 'jsdom',
+    setupFiles: 'src/setupTests.js',
+  },
+>>>>>>> e53dac7a15efe1a196e1360110566c727c66b42f
   resolve: {
     alias: [
       {

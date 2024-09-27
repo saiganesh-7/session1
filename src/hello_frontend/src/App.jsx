@@ -1,31 +1,72 @@
-import { useState } from 'react';
-import { hello_backend } from 'declarations/hello_backend';
+import React, { useState } from 'react';
 
-function App() {
-  const [greeting, setGreeting] = useState('');
+const App = () => {
+  const [weight, setWeight] = useState('');
+  const [height, setHeight] = useState('');
+  const [bmi, setBmi] = useState(null);
+  const [message, setMessage] = useState('');
 
-  function handleSubmit(event) {
-    event.preventDefault();
-    const name = event.target.elements.name.value;
-    hello_backend.greet(name).then((greeting) => {
-      setGreeting(greeting);
-    });
-    return false;
-  }
+  const calculateBMI = (e) => {
+    e.preventDefault();
+    if (weight && height) {
+      const bmiValue = (weight / (height * height)).toFixed(2);
+      setBmi(bmiValue);
+      determineBMICategory(bmiValue);
+    } else {
+      setMessage('Please enter valid weight and height');
+    }
+  };
+
+  const determineBMICategory = (bmiValue) => {
+    let bmiMessage = '';
+    if (bmiValue < 18.5) {
+      bmiMessage = 'Underweight';
+    } else if (bmiValue >= 18.5 && bmiValue < 24.9) {
+      bmiMessage = 'Normal weight';
+    } else if (bmiValue >= 25 && bmiValue < 29.9) {
+      bmiMessage = 'Overweight';
+    } else {
+      bmiMessage = 'Obesity';
+    }
+    setMessage(bmiMessage);
+  };
 
   return (
-    <main>
-      <img src="/logo2.svg" alt="DFINITY logo" />
-      <br />
-      <br />
-      <form action="#" onSubmit={handleSubmit}>
-        <label htmlFor="name">Enter your name: &nbsp;</label>
-        <input id="name" alt="Name" type="text" />
-        <button type="submit">Click Me!</button>
+    <div style={{ padding: '20px' }}>
+      <h1>BMI Calculator</h1>
+      <form onSubmit={calculateBMI}>
+        <div>
+          <label>Weight (kg): </label>
+          <input
+            type="number"
+            value={weight}
+            onChange={(e) => setWeight(e.target.value)}
+            placeholder="Enter your weight"
+          />
+        </div>
+        <div style={{ marginTop: '10px' }}>
+          <label>Height (meters): </label>
+          <input
+            type="number"
+            step="0.01"
+            value={height}
+            onChange={(e) => setHeight(e.target.value)}
+            placeholder="Enter your height"
+          />
+        </div>
+        <div style={{ marginTop: '10px' }}>
+          <button type="submit">Calculate BMI</button>
+        </div>
       </form>
-      <section id="greeting">{greeting}</section>
-    </main>
+
+      {bmi && (
+        <div style={{ marginTop: '20px' }}>
+          <h2>Your BMI: {bmi}</h2>
+          <h3>{message}</h3>
+        </div>
+      )}
+    </div>
   );
-}
+};
 
 export default App;
